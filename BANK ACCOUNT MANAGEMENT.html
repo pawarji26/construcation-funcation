@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Account Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #app {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        input {
+            padding: 8px;
+            margin: 8px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        #displayArea {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <h2>Bank Account Management</h2>
+
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" placeholder="Enter amount" required>
+        <br>
+
+        <button onclick="deposit()">Deposit</button>
+        <button onclick="withdraw()">Withdraw</button>
+        <button onclick="checkBalance()">Check Balance</button>
+        <button onclick="isActive()">Check Active Status</button>
+        <br>
+
+        <div id="displayArea">
+            
+        </div>
+    </div>
+
+    <script>
+        
+        // Constructor function for BankAccount
+function BankAccount(accountNumber, name, type, balance) {
+    this.accountNumber = accountNumber;
+    this.name = name;
+    this.type = type;
+    this.balance = balance;
+    this.active = true; // Account is active by default
+}
+
+// Methods added to the BankAccount prototype
+BankAccount.prototype.deposit = function(amount) {
+    if (amount > 0) {
+        this.balance += amount;
+        console.log(`Deposited $${amount}. New balance: $${this.balance}`);
+    } else {
+        console.log("Invalid deposit amount.");
+    }
+};
+
+BankAccount.prototype.withdraw = function(amount) {
+    if (this.active && amount > 0 && amount <= this.balance) {
+        this.balance -= amount;
+        console.log(`Withdrawn $${amount}. New balance: $${this.balance}`);
+    } else {
+        console.log("Invalid withdrawal amount or insufficient balance.");
+    }
+};
+
+BankAccount.prototype.checkBalance = function() {
+    console.log(`Account balance: $${this.balance}`);
+};
+
+BankAccount.prototype.isActive = function() {
+    return this.active;
+};
+
+// Function to calculate total balance of all active accounts
+function getTotalBalance(accounts) {
+    let totalBalance = 0;
+    for (const account of accounts) {
+        if (account.isActive()) {
+            totalBalance += account.balance;
+        }
+    }
+    return totalBalance;
+}
+
+// Creating multiple BankAccount objects
+const account1 = new BankAccount(101, "John Doe", "Savings", 1000);
+const account2 = new BankAccount(102, "Jane Smith", "Checking", 2000);
+const account3 = new BankAccount(103, "Bob Johnson", "Savings", 1500);
+
+// Performing operations on the accounts
+account1.deposit(500);
+account2.withdraw(300);
+account3.deposit(100);
+account1.withdraw(1200);
+account2.deposit(800);
+
+// Checking balances
+account1.checkBalance();
+account2.checkBalance();
+account3.checkBalance();
+
+// Testing isActive method
+console.log("Account 1 is active:", account1.isActive());
+console.log("Account 2 is active:", account2.isActive());
+console.log("Account 3 is active:", account3.isActive());
+
+// Testing getTotalBalance function
+const allAccounts = [account1, account2, account3];
+const totalBalance = getTotalBalance(allAccounts);
+console.log(`Total balance of all active accounts: $${totalBalance}`);
+
+
+        // Redefine the displayArea as a variable
+        var displayArea = document.getElementById("displayArea");
+
+        // Redefine the methods to display results using innerText
+        BankAccount.prototype.deposit = function(amount) {
+            if (amount > 0) {
+                this.balance += amount;
+                displayArea.innerText = `Deposited $${amount}. New balance: $${this.balance}`;
+            } else {
+                displayArea.innerText = "Invalid deposit amount.";
+            }
+        };
+
+        BankAccount.prototype.withdraw = function(amount) {
+            if (this.active && amount > 0 && amount <= this.balance) {
+                this.balance -= amount;
+                displayArea.innerText = `Withdrawn $${amount}. New balance: $${this.balance}`;
+            } else {
+                displayArea.innerText = "Invalid withdrawal amount or insufficient balance.";
+            }
+        };
+
+        BankAccount.prototype.checkBalance = function() {
+            displayArea.innerText = `Account balance: $${this.balance}`;
+        };
+
+        BankAccount.prototype.isActive = function() {
+            displayArea.innerText = `Account is ${this.active ? 'active' : 'inactive'}.`;
+            return this.active;
+        };
+
+        // Display total balance using innerText
+        function getTotalBalance(accounts) {
+            let totalBalance = 0;
+            for (const account of accounts) {
+                if (account.isActive()) {
+                    totalBalance += account.balance;
+                }
+            }
+            displayArea.innerText = `Total balance of all active accounts: $${totalBalance}`;
+            return totalBalance;
+        }
+    </script>
+
+</body>
+</html>
